@@ -1,0 +1,22 @@
+# Ignore les fichiers générés par Maven
+/target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+
+# Ignore les fichiers générés par IDEs
+.classpath
+.project
+.settings/
+*.iml
+.idea/
+
+# Ignore les fichiers générés par Node.js et React
+node_modules/
+/build/
+.env
