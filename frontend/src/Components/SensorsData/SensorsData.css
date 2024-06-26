@@ -1,0 +1,34 @@
+.sensors-data-container {
+    width: 27%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #eee;
+    border-radius: 10px;
+    box-shadow: 5px 5px 5px rgba(0,0,0,0.2);
+}
+
+.sensors-input-box{
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+.sensors-input-box span { 
+    margin-left: 6px;
+}
+
+.sensors-data-container label {
+    display: inline-block;
+    margin-right: 5px;
+    font-weight: 700;
+    width: 75px;
+    
+}
+
+.sensors-data-container input {
+    border: .4px solid rgba(0,0,0,0.5);
+    padding: 4px 0px; 
+    text-align: center;
+    border-radius: 5px;
+}

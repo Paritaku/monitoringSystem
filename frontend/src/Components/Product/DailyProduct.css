@@ -1,0 +1,42 @@
+.daily-product-container {
+    width: 100%;
+    background-color: #eee;
+    border-radius: 10px;
+    box-shadow: 5px 5px 5px rgba(0,0,0,0.2);
+}
+.daily-product-container h1 {
+    display: flex;
+    justify-content: center;
+    padding: .5rem 0px;
+    color: white;
+    height: 2rem;
+    background-color: #0004;
+    height: 10%;
+}
+.daily-product-container table{
+    width: 100%;
+    border-collapse: collapse;
+}
+.daily-product-container th,.daily-product-container  td {
+    padding: 1rem;
+    border-collapse: collapse;
+}
+.daily-product-container th {
+    background-color: #333333ff;
+    color: white;
+}
+
+.daily-product-container td{
+    text-align: center;
+    border-bottom: .1px solid #00000033;
+}
+
+.EN-COURS{
+    background-color: #87CEEB;
+}
+.TERMINE {
+    background-color: aquamarine;
+}
+.TRANSITION {
+    background-color: #FFFF0011;
+}
