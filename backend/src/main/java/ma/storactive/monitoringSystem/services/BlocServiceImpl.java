@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import ma.storactive.monitoringSystem.entities.Bloc;
@@ -17,12 +18,18 @@ import ma.storactive.monitoringSystem.repositories.GenreRepository;
 public class BlocServiceImpl implements BlocService {
 	@Autowired
 	BlocRepository blocRepository;
+	@Autowired
 	GenreRepository genreRepository;
+	@Autowired
+	SimpMessagingTemplate template;
 
 	@Override
 	public Bloc createBloc(Bloc bloc) {
-		System.out.println(bloc);
-		return blocRepository.save(bloc);
+		// System.out.println(bloc);
+		//Actualisation de today bloc pour l'UI
+		Bloc response = blocRepository.save(bloc);
+		template.convertAndSend("/topic/bloc/today", getTodayBloc());
+		return response;
 	}
 
 	@Override
@@ -30,6 +37,8 @@ public class BlocServiceImpl implements BlocService {
 		Optional<Bloc> bloc = blocRepository.findById(id);
 		if(bloc.isPresent()) {
 			blocRepository.deleteById(id);
+			//Actualisation de today bloc pour l'UI
+			template.convertAndSend("/topic/bloc/today", getTodayBloc());
 			return bloc.get().getBlocName() + " de type " + bloc.get().getGenre().getIntitule() + "supprimé";
 		}
 		return "Bloc not found";

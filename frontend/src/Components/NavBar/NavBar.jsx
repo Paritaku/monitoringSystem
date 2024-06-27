@@ -31,29 +31,30 @@ function NavBar() {
         token: {colorBgContainer},
     } = theme.useToken();
 
+    //Modifier statut du bloc dans la BDD
+    const changeBlocStatus = async (blocUpdated) => {
+        const response = await axios.post(UPDATE_BLOC_STATUS_URL, blocUpdated);
+    }
+
+    //Demarrer un bloc
     const handleStart = (bloc) => {
-        if(!loadingStatus) {
-            bloc.blocStatut = "EN-COURS";
-            setBlocEnCours(bloc);
-            setLoadingStatus(true);
-            changeBlocStatus(bloc);
+        //Verifier si un bloc n'est pas déjà en cours
+        if(loadingStatus === false) {
+            bloc.blocStatut = "EN-COURS"; 
+            setBlocEnCours(bloc); //Definir comme bloc en cours
+            setLoadingStatus(true); //Changer le statut du loading
+            changeBlocStatus(bloc); //Changer le statut dans la BDD
         }
     }
 
     const handleEnd = (bloc) => {
-        if(loadingStatus){
-            if(bloc.blocStatut === "EN-COURS") {
-                bloc.blocStatut = "TERMINE";
-                console.log(bloc);
-                changeBlocStatus(bloc);
-                setBlocEnCours(null);
-                setLoadingStatus(false);
-            }
+        //Verifier qu'un bloc est en cours et que c'est bien lui que l'on termine 
+        if(loadingStatus && bloc.id === blocEnCours.id ){
+            bloc.blocStatut = "TERMINE";
+            changeBlocStatus(bloc); //Changer dans la BDD
+            setBlocEnCours(null); //Mettre à null le bloc en cours et le boolean
+            setLoadingStatus(false);
         }
-    }
-
-    const changeBlocStatus = async (blocUpdated) => {
-        const response = await axios.post(UPDATE_BLOC_STATUS_URL, blocUpdated);
     }
 
 

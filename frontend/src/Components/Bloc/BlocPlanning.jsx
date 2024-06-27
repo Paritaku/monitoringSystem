@@ -4,44 +4,66 @@ import { Button } from '@mui/material'
 import AjoutBloc from './AjoutBloc'
 import axios from 'axios';
 import {LoadingOutlined } from '@ant-design/icons';
+import SockJS from 'sockjs-client';
+import { Client } from '@stomp/stompjs';
 
 function BlocPlanning({startBloc, endBloc}) {
     const GET_BLOC_DU_JOUR_URL = "http://localhost:8080/api/v1/bloc/getTodayBloc";
     const DELETE_BLOC_URL = "http://localhost:8080/api/v1/bloc/delete/"
     const [dialogState, setDialogState] = useState(false);
     const [blocChanged, setBlocChanged] = useState(false);
+    const [blocDuJour, setBlocDuJour] = useState([]);
+    const WEB_SOCKET_URL = "http://localhost:8080/ws";
+
     const showDialog = () => {
         setDialogState(true);
     }
 
-    const [blocDuJour, setBlocDuJour] = useState([]);
-    
     const fetchBlocDuJour = async () => {
         const {data} = await axios.get(GET_BLOC_DU_JOUR_URL);
         setBlocDuJour(data);
     }
 
-    useEffect(() => {
-        fetchBlocDuJour();
-    },[])
-
-    useEffect(() => {
-        if(blocChanged){
-            fetchBlocDuJour();
-            setBlocChanged(false);
-        }
-    },[blocChanged])
-
     const handleDelete = async (blocId) => {
         try {
             const response = await axios.delete(DELETE_BLOC_URL + blocId);
-            if(response.status === 200) {
-                fetchBlocDuJour();
-            }
         } catch (error) {
             console.log(error);
         }
     }
+    const refreshBlocUI = () => {
+        
+    }
+
+    useEffect(() => {
+        fetchBlocDuJour();
+        const socket = new SockJS(WEB_SOCKET_URL);
+        const stompClient = new Client({
+            webSocketFactory: () => socket,
+            debug: (str) => {
+                console.log(str);
+            },
+            onConnect: () => {
+                console.log("Connected");
+                stompClient.subscribe("/topic/bloc/today", (message) => {
+                    console.log(message.body)
+                    setBlocDuJour(JSON.parse(message.body));  
+                })
+            },
+            onStompError: (frame) => {
+                    console.error('Broker reported error: ' + frame.headers['message']);
+                    console.error('Additional details: ' + frame.body);
+            }
+        });
+        stompClient.activate();
+
+        //Deconnexion au démontage
+        return () => {
+            stompClient.deactivate();
+        }
+    },[])
+
+   
 
     return (
         <div class="bloc-planning-container">
