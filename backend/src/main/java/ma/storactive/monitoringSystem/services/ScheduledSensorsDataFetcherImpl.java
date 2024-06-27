@@ -8,14 +8,16 @@ import org.springframework.stereotype.Service;
 import ma.storactive.monitoringSystem.entities.Produit;
 
 @Service
-public class ScheduledSensorsDataFetcherImpl {
+public class ScheduledSensorsDataFetcherImpl implements ScheduledSensorsDataFetecher {
 	@Autowired
 	private CapteursService capteursService;
 	
 	@Autowired
 	private SimpMessagingTemplate template;
 	
+	
 	@Scheduled(fixedRate = 250)
+	@Override
 	public void fetchData() {
 		Produit p = capteursService.getCapteursValues();
 		int validation = capteursService.validation();
@@ -24,6 +26,5 @@ public class ScheduledSensorsDataFetcherImpl {
 			template.convertAndSend("/topic/data", p);
 			template.convertAndSend("/topic/validation", validation);
 		}
-		
 	}
 }
