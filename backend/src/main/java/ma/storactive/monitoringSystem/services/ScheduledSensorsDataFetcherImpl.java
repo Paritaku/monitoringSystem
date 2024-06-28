@@ -16,7 +16,7 @@ public class ScheduledSensorsDataFetcherImpl implements ScheduledSensorsDataFete
 	private SimpMessagingTemplate template;
 	
 	
-	@Scheduled(fixedRate = 250)
+	@Scheduled(fixedRate = 1000000)
 	@Override
 	public void fetchData() {
 		Produit p = capteursService.getCapteursValues();

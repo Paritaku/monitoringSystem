@@ -1,28 +1,54 @@
 import React, { useEffect, useState } from 'react'
 import './DailyProduct.css'
 import axios from 'axios';
-
-
+import SockJS from 'sockjs-client';
+import { Client } from '@stomp/stompjs';
 
 const DailyProduct = ({newProduct, setNewProduct}) => {
     const GET_DAILY_PRODUCT_URL = "http://localhost:8080/api/v1/produit/getTodayProduct";
     const [produitEnregistreToday, setproduitEnregistreToday] = useState([]);
+    const WEB_SOCKET_URL = "http://localhost:8080/ws";
 
+    //Charger les produits enregistrés aujourd'hui
     const loadTodayProduct= async () => {
         const {data} = await axios.get(GET_DAILY_PRODUCT_URL);
         setproduitEnregistreToday(data);
-    } 
+    }
 
     useEffect(() => {
         loadTodayProduct();
+        //Socket pour actualiser le tableau de produit
+        const socket = new SockJS(WEB_SOCKET_URL);
+        const stompClient = new Client({
+            webSocketFactory: () => socket,
+            debug: (str) => {
+                console.log(str);
+            },
+            onConnect: () => {
+                console.log("Connected");
+                stompClient.subscribe("/topic/produit/today", (message) => {
+                    setproduitEnregistreToday(JSON.parse(message.body));
+                });
+            },
+            onStompError: (frame) => {
+                console.error("Broker reported error: " + frame.headers["message"]);
+                console.error("Additional details: " + frame.body);
+            },
+        });
+        stompClient.activate();
+
+        //Deconnexion au démontage
+        return () => {
+            stompClient.deactivate();
+        };
     },[])
 
-    useEffect(() => {
+    /*useEffect(() => {
         if(newProduct) {
             loadTodayProduct();
             setNewProduct(false);
         }
-    },[newProduct])
+    },[newProduct])*/
 
     return (
         <div className='daily-product-container'>
@@ -74,5 +100,4 @@ const DailyProduct = ({newProduct, setNewProduct}) => {
         </div>
   )
 }
-
 export default DailyProduct

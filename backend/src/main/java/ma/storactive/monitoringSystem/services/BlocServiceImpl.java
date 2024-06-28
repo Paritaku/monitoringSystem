@@ -7,12 +7,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties.Lettuce.Cluster.Refresh;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import ma.storactive.monitoringSystem.entities.Bloc;
 import ma.storactive.monitoringSystem.repositories.BlocRepository;
 import ma.storactive.monitoringSystem.repositories.GenreRepository;
+import ma.storactive.monitoringSystem.repositories.ProduitRepository;
 
 @Service
 public class BlocServiceImpl implements BlocService {
@@ -21,6 +23,8 @@ public class BlocServiceImpl implements BlocService {
 	@Autowired
 	GenreRepository genreRepository;
 	@Autowired
+	ProduitService produitService;
+	@Autowired
 	SimpMessagingTemplate template;
 
 	@Override
@@ -28,7 +32,7 @@ public class BlocServiceImpl implements BlocService {
 		// System.out.println(bloc);
 		//Actualisation de today bloc pour l'UI
 		Bloc response = blocRepository.save(bloc);
-		template.convertAndSend("/topic/bloc/today", getTodayBloc());
+		refreshTodayBloc(response);
 		return response;
 	}
 
@@ -38,7 +42,7 @@ public class BlocServiceImpl implements BlocService {
 		if(bloc.isPresent()) {
 			blocRepository.deleteById(id);
 			//Actualisation de today bloc pour l'UI
-			template.convertAndSend("/topic/bloc/today", getTodayBloc());
+			refreshTodayBloc(bloc.get());
 			return bloc.get().getBlocName() + " de type " + bloc.get().getGenre().getIntitule() + "supprimé";
 		}
 		return "Bloc not found";
@@ -62,5 +66,13 @@ public class BlocServiceImpl implements BlocService {
 	private int compareBlocStatut(String statut1, String statut2) {
 	    List<String> order = Arrays.asList("EN COURS", "INITIALISE", "TERMINE");
 	    return Integer.compare(order.indexOf(statut1), order.indexOf(statut2));
+	}
+	
+	public void refreshTodayBloc(Bloc b) {
+		if(b.getBlocDate().equals(LocalDate.now())) {
+			System.out.println("On entre");
+			template.convertAndSend("/topic/bloc/today", getTodayBloc());
+			template.convertAndSend("/topic/produit/today", produitService.getTodayProduit());
+		}
 	}
 }

@@ -2,6 +2,9 @@ package ma.storactive.monitoringSystem.entities;
 
 import java.time.LocalTime;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,6 +32,7 @@ public class Produit {
 	private double largeur;
 	private double poids;
 	private double densite;
+	
 	@ManyToOne
 	@JoinColumn(name = "blocId")
 	private Bloc bloc;
