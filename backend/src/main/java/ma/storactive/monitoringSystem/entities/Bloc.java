@@ -3,9 +3,7 @@ package ma.storactive.monitoringSystem.entities;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
-
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -36,7 +34,5 @@ public class Bloc {
 	
 	@Column(columnDefinition = "int default 0")
 	private int nbMatelas;
-	
-	@OneToMany(mappedBy = "bloc", cascade = CascadeType.ALL)
-	private List<Produit> productList;
+
 }

@@ -16,4 +16,5 @@ public interface ProduitRepository extends JpaRepository<Produit, Long> {
 	
 	@Query("SELECT p FROM Produit p WHERE p.id = (SELECT MAX(p2.id) FROM Produit p2)")
 	Optional<Produit> getLastProductSaved();
+	
 }

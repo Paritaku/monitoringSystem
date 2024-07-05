@@ -24,7 +24,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Produit {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
 	private double hauteur;

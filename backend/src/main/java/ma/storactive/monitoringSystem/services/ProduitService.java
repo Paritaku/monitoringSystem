@@ -10,4 +10,8 @@ public interface ProduitService {
 	List<Produit> getAllProduit();
 
 	List<Produit> getTodayProduit();
+
+	long getLastId();
+
+	void deleteProduit(Long id);
 }

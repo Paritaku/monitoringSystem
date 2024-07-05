@@ -1,4 +1,6 @@
 spring:
+ main:
+  allow-circular-references: true
  sql:
   init:
    mode: always

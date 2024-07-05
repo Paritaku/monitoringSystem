@@ -20,7 +20,5 @@ public class Genre {
 
 	@Column(nullable = false, unique = true)
 	private String intitule;
-	
-	@OneToMany(mappedBy = "genre",cascade = CascadeType.ALL)
-	private List<Bloc> blocList;
+
 }

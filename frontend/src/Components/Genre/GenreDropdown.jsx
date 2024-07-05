@@ -12,6 +12,7 @@ const GenreDropdown = ({genre, setGenre}) => {
             setListGenre(data);
         }
         fetchListGenre();
+        console.log(listGenre);
     },[]);
 
     useEffect(() => {

@@ -4,8 +4,7 @@ import './MyFooter.css'
 const MyFooter = () => {
   return (
     <div className='container'>
-            Copyright &copy; {new Date().getFullYear()} SERVALOG
-        
+      <h3>Copyright &copy; {new Date().getFullYear()} SERVALOG </h3>
     </div>
   )
 }

@@ -12,6 +12,7 @@ import SensorsData from '../SensorsData/SensorsData';
 import BlocPlanning from '../Bloc/BlocPlanning';
 import axios from 'axios';
 import DailyProduct from '../Product/DailyProduct';
+import DailyDashboard from '../DailyDashboard/DailyDashboard';
 
 const {Header, Sider, Content, Footer} = Layout;
 
@@ -43,6 +44,7 @@ function NavBar() {
             bloc.blocStatut = "EN-COURS"; 
             setBlocEnCours(bloc); //Definir comme bloc en cours
             setLoadingStatus(true); //Changer le statut du loading
+            console.log(bloc);
             changeBlocStatus(bloc); //Changer le statut dans la BDD
         }
     }
@@ -71,7 +73,7 @@ function NavBar() {
 
                 <Logo />
                 <MenuList darkTheme = {darkTheme} />
-                <ToggleThemeButton darkTheme={darkTheme} toggleTheme={toggleTheme} />
+                {/*<ToggleThemeButton darkTheme={darkTheme} toggleTheme={toggleTheme} />*/}
             </Sider>
 
             <Layout>
@@ -84,11 +86,13 @@ function NavBar() {
                 </Header>
 
                 <Content style={{padding: '10px',margin: '10px'}} >
+                    <DailyDashboard />
                     <div className='sensors-bloc'>
-                        <SensorsData blocEnCours ={blocEnCours} newProduct={newProduct} setNewProduct={setNewProduct}/>
+                        <SensorsData blocEnCours ={blocEnCours} setBlocEnCours={setBlocEnCours} />
                         <BlocPlanning startBloc={handleStart} endBloc = {handleEnd} />
                     </div>
                     <DailyProduct newProduct={newProduct} setNewProduct={setNewProduct} />
+
                 </Content>
 
                 <Footer style={{backgroundColor: "#ccc", padding: 0}}>

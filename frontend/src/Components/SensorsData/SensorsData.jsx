@@ -5,8 +5,18 @@ import axios from "axios";
 import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 
-const SensorsData = ({ blocEnCours, newProduct, setNewProduct }) => {
+const SensorsData = ({ blocEnCours}) => {
+    const ADD_PRODUIT_URL = "http://localhost:8080/api/v1/produit/save";
+    const PRINTER_CONNECTION_STATUS =
+        "http://localhost:8080/api/v1/printer/statut";
+    const SEND_PRODUCT_TO_PRINTER_URL =
+        "http://localhost:8080/api/v1/printer/sendlastproduct";
+    const WEB_SOCKET_URL = "http://localhost:8080/ws";
+    const LAST_PRODUIT_ID_URL = "http://localhost:8080/api/v1/produit/getLastId";
+
+    
     const [formValue, setFormValue] = useState({
+        numeroInputValue: "",
         hauteurInputValue: "",
         longueurInputValue: "",
         largeurInputValue: "",
@@ -14,12 +24,15 @@ const SensorsData = ({ blocEnCours, newProduct, setNewProduct }) => {
         densiteInputValue: "",
         validationInputValue: "",
     });
-    const ADD_PRODUIT_URL = "http://localhost:8080/api/v1/produit/save";
-    const PRINTER_CONNECTION_STATUS =
-        "http://localhost:8080/api/v1/printer/statut";
-    const SEND_PRODUCT_TO_PRINTER_URL =
-        "http://localhost:8080/api/v1/printer/sendlastproduct";
-    const WEB_SOCKET_URL = "http://localhost:8080/ws";
+
+    async function initializeProdNum(){
+        const {data} = await axios.get(LAST_PRODUIT_ID_URL);
+        setFormValue((prev) => ({
+            ...prev,
+            numeroInputValue: data+1
+        }))
+    }
+    
 
     const getTime = () => {
         const instant = new Date();
@@ -66,7 +79,7 @@ const SensorsData = ({ blocEnCours, newProduct, setNewProduct }) => {
 
     const addProduct = async () => {
         const produit = {
-            id: null,
+            id: formValue.numeroInputValue,
             hauteur: formValue.hauteurInputValue,
             longueur: formValue.longueurInputValue,
             largeur: formValue.largeurInputValue,
@@ -87,15 +100,15 @@ const SensorsData = ({ blocEnCours, newProduct, setNewProduct }) => {
                     ? console.log("Données envoyées")
                     : console.log("Erreur lors de l'envoi");
             }*/
-            setFormValue({
+            setFormValue((prev) => ({
+                numeroInputValue: ++prev.numeroInputValue,
                 hauteurInputValue: "",
                 longueurInputValue: "",
                 largeurInputValue: "",
                 poidsInputValue: "",
                 densiteInputValue: "",
                 validationInputValue: "",
-            });
-            setNewProduct(true);
+            }));
         }
     };
 
@@ -134,6 +147,7 @@ const SensorsData = ({ blocEnCours, newProduct, setNewProduct }) => {
       },[])*/
 
     useEffect(() => {
+        initializeProdNum();
         //Connexion au websocket pour la lecture des données des capteurs en temps réel
         const socket = new SockJS(WEB_SOCKET_URL);
         const stompClient = new Client({
@@ -178,6 +192,25 @@ const SensorsData = ({ blocEnCours, newProduct, setNewProduct }) => {
     return (
         <>
             <div className="sensors-data-container">
+                <div className="sensors-input-box">
+                    <label>Numero</label>
+                    <input
+                        type="number"
+                        value={formValue.numeroInputValue}
+                        name="numeroInputValue"
+                        step={1}
+                        onChange={(event) => handleCapteursChange(event)}
+                    />
+                    <span>
+                        {formValue.numeroInputValue > 0 ? (
+                            <CheckSquareOutlined
+                                style={{ fontSize: "30px", color: "green" }}
+                            />
+                        ) : (
+                            <CloseSquareOutlined style={{ fontSize: "30px", color: "red" }} />
+                        )}
+                    </span>
+                </div>
                 <div className="sensors-input-box">
                     <label>Hauteur</label>
                     <input
