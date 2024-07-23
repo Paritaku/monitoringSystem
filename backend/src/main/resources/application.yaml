@@ -1,4 +1,4 @@
- spring:
+spring:
  main:
   allow-circular-references: true
  sql:
@@ -9,7 +9,7 @@
   url: jdbc:mysql://localhost:3306/1_ms?createDatabaseIfNotExist=true
   username: root
   password: root
-  driverClassName: com.mysql.cj.jdbc.Driver
+  driver-class-name: com.mysql.cj.jdbc.Driver
   
  jpa:
   hibernate:

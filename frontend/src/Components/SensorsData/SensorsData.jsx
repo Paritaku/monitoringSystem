@@ -30,7 +30,7 @@ export default function SensorsData(props) {
     };
 
     //Ajout d'un bloc à la BDD et incrementation du count de bloc dans la coulée
-    async function addBloc(comment) {
+    async function addBloc() {
         const bloc = {
             id: null,
             numero: (props.couleeEnCours.nbBloc + 1),
@@ -41,7 +41,7 @@ export default function SensorsData(props) {
             densite: props.formValue.densiteInputValue,
             coulee: props.couleeEnCours,
             heureEnregistrement: getTime(),
-            commentaire: comment
+            /*commentaire: comment*/
         };
         console.log(bloc);
         const response = await axios.post(ADD_BLOC_URL, bloc);
@@ -88,7 +88,7 @@ export default function SensorsData(props) {
     //Enregistrement du bloc si validation
     useEffect(() => {
         if (props.formValue.validationInputValue > 0) {
-            let longueurInputComment = (props.formValue.longueurInputValue > 0 ? "" : "Longueur incorrecte! ");
+            /*let longueurInputComment = (props.formValue.longueurInputValue > 0 ? "" : "Longueur incorrecte! ");
             let largeurInputComment = (props.formValue.largeurInputValue > 0 ? "" : "Largeur incorrecte! ");
             let hauteurInputComment = (props.formValue.hauteurInputValue > 0 ? "" : "Hauteur incorrecte! ");
             let poidsInputComment = (props.formValue.poidsInputValue > 0 ? "" : "Poids incorrecte! ");
@@ -102,8 +102,8 @@ export default function SensorsData(props) {
                 validationInputComment = "";
             }
             let finalComment = longueurInputComment + largeurInputComment + poidsInputComment + hauteurInputComment + densiteInputComment + validationInputComment;
-            console.log(finalComment);
-            addBloc(finalComment);
+            console.log(finalComment);*/
+            addBloc();
         }
     }, [props.formValue])
 

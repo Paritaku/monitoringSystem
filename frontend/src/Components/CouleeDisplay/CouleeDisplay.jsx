@@ -78,7 +78,7 @@ export default function CouleeDisplay(props) {
                                 <th>Poids</th>
                                 <th>Densite</th>
                                 <th>Heure d'enregistrement</th>
-                                <th>Commentaires</th>
+                                {/*<th>Commentaires</th> */}
                             </tr>
                         </thead>
 
@@ -95,7 +95,7 @@ export default function CouleeDisplay(props) {
                                     <td>{bloc.poids}</td>
                                     <td>{bloc.densite}</td>
                                     <td>{bloc.heureEnregistrement}</td>
-                                    <td>{bloc.commentaire}</td>
+                                    {/*<td>{bloc.commentaire}</td> */}
                                 </tr>
                             ))}
                             
