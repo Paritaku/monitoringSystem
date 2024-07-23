@@ -5,8 +5,16 @@ import java.util.List;
 import ma.storactive.monitoringSystem.entities.Bloc;
 
 public interface BlocService {
-	Bloc createBloc(Bloc bloc);
-	String deleteBloc(long id);
-	List<Bloc> getAllBloc();
-	List<Bloc> getTodayBloc();
+	Bloc saveBloc(Bloc p);
+	
+	void deleteBloc(Long id);
+	
+	long getLastId();
+
+	List<Bloc> getAllBlocs();
+
+	List<Bloc> getTodayBlocs();
+
+	List<Bloc> getBlocsByCouleeId(Long id);
+
 }

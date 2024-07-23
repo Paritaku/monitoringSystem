@@ -1,0 +1,16 @@
+.daily-coulee-list {
+    background-color: #eee;
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 5px 5px 5px rgba(0,0,0,0.2);
+    margin-top: 2rem;
+}
+
+.daily-coulee-list h2 {
+    background-color: #0004;
+    padding: .8rem 1rem;
+    color: white;
+}
+.list-coulee-display {
+    padding: 1rem;
+}

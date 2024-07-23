@@ -1,0 +1,97 @@
+.coulee-prod {
+    background-color: #eee;
+    position: relative;
+    width: 60%;
+    border-radius: 10px;
+    box-shadow: 5px 5px 5px rgba(0,0,0,0.2);
+}
+.coulee-prod h2 {
+    background-color: #0004;
+    padding: .8rem 1rem;
+    color: white;
+}
+.no-coulee-today {
+    display: flex;
+    min-height: 80%;
+    justify-content: center;
+    align-items: center;
+}
+.no-coulee-today strong {
+    font-size: 1.5rem;
+}
+
+.coulee-num {
+    text-align: center;
+    padding-block: .5rem;
+}
+
+.coulee-num label {
+    font-size: 1.2rem;
+    margin-right: .5rem;
+}
+
+.coulee-num input {
+    font-weight: bold;
+    padding: .25rem;
+    text-align: center;
+    width: 10%;
+}
+
+.coulee-prod-table {
+    max-height: 300px;
+    overflow: auto;
+}
+.coulee-prod-table table {
+    width: 100%;
+    background: white;
+    border-collapse: collapse;
+}
+.coulee-prod-table th {
+    padding-block: 1rem;
+    background-color: #7fffd4;
+    text-align: center;
+}
+.coulee-prod-table td {
+    padding-block: .75rem;
+    text-align: center;
+}
+.coulee-prod-table tr:nth-child(even) {
+    background: rgba(0, 0, 0, .1);
+}
+
+
+.coulee-en-attente {
+    background-color: cornflowerblue;
+    color:blue;
+    padding: .5rem 1rem;
+    border-radius: 50px;
+    font-weight: 500;
+    
+}
+.coulee-termine{
+    background-color: #7fffd4ff;
+    color:green;
+    padding: .5rem 1rem;
+    border-radius: 50px;
+    font-weight: 500;   
+}
+
+
+.btn-coulee-prod {
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    width: 100%;
+    justify-content: space-evenly;
+
+    button {
+        padding: 1rem;
+        border: none;
+        background-color: white;
+        box-shadow: 0 5px 5px rgba(0, 0, 0, .1);
+    }
+    button:hover {
+        color: deepskyblue;
+    }
+}
+

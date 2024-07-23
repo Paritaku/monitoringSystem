@@ -1,9 +1,10 @@
 package ma.storactive.monitoringSystem.entities;
 
-import java.time.LocalDate;
-import java.util.List;
+import java.time.LocalTime;
 
-import jakarta.persistence.CascadeType;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,28 +12,38 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Entity
 @Data
+@Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Bloc {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long blocId;
+	private long id;
 	
-	@Column(nullable = false, unique = true)
-	private String blocName;
-
+	//Represente la position du bloc à l'intérieur de la coulée
+	private long numero;
+	
+	private double hauteur;
+	private double longueur;
+	private double largeur;
+	private double poids;
+	private double densite;
+	private String commentaire;
 	@ManyToOne
-	@JoinColumn(name = "genreId")
-	private Genre genre;
-	
-	private LocalDate blocDate;
-	
-	private String blocStatut;
-	
-	@Column(columnDefinition = "int default 0")
-	private int nbMatelas;
+	@JoinColumn(name = "coulee_Id")
+	private Coulee coulee;
 
+	@Column(columnDefinition = "time")
+	private LocalTime heureEnregistrement;
+	
+	public String printerString() {
+		return this.hauteur + ","  + this.longueur + "," + this.largeur + "," + this.poids + "," + this.densite + "," + this.coulee.getType().getIntitule();
+	}
 }

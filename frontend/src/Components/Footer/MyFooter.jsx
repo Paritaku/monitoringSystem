@@ -1,12 +1,9 @@
-import React from 'react'
-import './MyFooter.css'
-
-const MyFooter = () => {
-  return (
-    <div className='container'>
-      <h3>Copyright &copy; {new Date().getFullYear()} SERVALOG </h3>
-    </div>
-  )
+import { Footer } from "antd/es/layout/layout";
+import "./MyFooter.css"
+export default function MyFooter(){
+    return(
+        <Footer className="footer-wrapper">
+            <h3>Copyright &copy; {new Date().getFullYear()} SERVALOG - EGATECH </h3>
+        </Footer>
+    );
 }
-
-export default MyFooter

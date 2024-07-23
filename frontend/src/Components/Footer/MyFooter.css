@@ -1,8 +1,8 @@
-.container {
-    min-height: 7vh;
+.footer-wrapper {
+    background-color: white;
+    text-align: center;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #FFF;
-    box-shadow: 0 0 5px rgba(0, 0, 0, .4);
+    max-height: 2vh;
 }

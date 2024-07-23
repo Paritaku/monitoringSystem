@@ -1,0 +1,19 @@
+.sider-logo-wrapper{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    padding: 1rem;
+    font-size: 2rem;
+}
+
+.menu-bar {
+    height: 90vh;
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    font-size: 1rem;
+    position: relative;
+}
+

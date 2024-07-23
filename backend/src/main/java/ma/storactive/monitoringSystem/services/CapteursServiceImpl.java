@@ -9,14 +9,18 @@ import org.apache.plc4x.java.api.PlcConnection;
 import org.apache.plc4x.java.api.exceptions.PlcConnectionException;
 import org.apache.plc4x.java.api.messages.PlcReadRequest;
 import org.apache.plc4x.java.api.messages.PlcReadResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import ma.storactive.monitoringSystem.entities.Produit;
-
+import ma.storactive.monitoringSystem.entities.Bloc;
 
 @Service
 public class CapteursServiceImpl implements CapteursService {
 	private static PlcConnection plcConnection = null;
+	@Autowired
+	private SimpMessagingTemplate template;
 
 	@Override
 	public PlcConnection connect() {
@@ -33,15 +37,14 @@ public class CapteursServiceImpl implements CapteursService {
 
 	@Override
 	public boolean isConnected() {
-		if(connect() == null) 
+		if (connect() == null)
 			return false;
-		else 
+		else
 			return connect().isConnected();
-		
 	}
 
 	@Override
-	public Produit getCapteursValues() {
+	public Bloc getCapteursValues() {
 		connect();
 		if (isConnected()) {
 			PlcReadRequest.Builder requestBuilder = plcConnection.readRequestBuilder();
@@ -55,15 +58,13 @@ public class CapteursServiceImpl implements CapteursService {
 
 			try {
 				PlcReadResponse readResponse = readRequest.execute().get();
-				
-				Produit p = Produit.builder()
-						.longueur(round(readResponse.getDouble("longueur"), 2))
+
+				Bloc p = Bloc.builder().longueur(round(readResponse.getDouble("longueur"), 2))
 						.largeur(round(readResponse.getDouble("largeur"), 2))
 						.hauteur(round(readResponse.getDouble("hauteur"), 2))
 						.poids(round(readResponse.getDouble("poids"), 2))
-						.densite(round(readResponse.getDouble("densite"), 2))
-						.build();
-				
+						.densite(round(readResponse.getDouble("densite"), 2)).build();
+
 				return p;
 			} catch (InterruptedException | ExecutionException e) {
 				e.printStackTrace();
@@ -83,10 +84,10 @@ public class CapteursServiceImpl implements CapteursService {
 
 	@Override
 	public int validation() {
-		if(isConnected()) {
+		if (isConnected()) {
 			PlcReadRequest.Builder requestBuilder = plcConnection.readRequestBuilder();
 			requestBuilder.addTagAddress("validation", "%IW34:INT");
-			
+
 			PlcReadRequest readRequest = requestBuilder.build();
 			try {
 				PlcReadResponse readResponse = readRequest.execute().get();
@@ -96,5 +97,16 @@ public class CapteursServiceImpl implements CapteursService {
 			}
 		}
 		return -1;
+	}
+
+	@Scheduled(fixedRate = 4000)
+	@Override
+	public void fetchData() {
+		Bloc b = getCapteursValues();
+		/*int validation = validation();*/
+		if(b != null)
+			template.convertAndSend("/topic/data", getCapteursValues());
+		template.convertAndSend("/topic/validation", validation());
+		
 	}
 }

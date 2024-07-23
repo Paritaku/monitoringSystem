@@ -1,9 +1,10 @@
 .main-container {
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: url('../Assets/background.jpg') no-repeat;
+    flex-direction: column;
+    background: url('../assets/background.jpg') no-repeat;
     background-size: cover;
     background-position: center;
 }
@@ -25,7 +26,7 @@
     background: linear-gradient(to bottom right, #444750, #696daa);
 	border-color:black;
 	border-width: .4px 0px .4px .4px;
-    border-radius: 15px 0px 0px 15px;
+    border-radius: 0 0 0 15px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -50,7 +51,7 @@
     height: 450px;
     background: white;
     padding: 30px 40px;
-    border-radius: 0px 15px 15px 0px;
+    border-radius: 0px 0px 15px 0px;
 }
 .right-form h1 {
     color: #7691ae;
@@ -98,4 +99,25 @@
 }
 .right-form button:hover {
     background: linear-gradient(to top, #284a86, #446ebb);
+}
+
+.company-logo-container {
+    background-color: rgba(255, 255, 255,.8);
+    box-shadow: 0 0 5px rgba(0,0,0,.2);
+    border: none;
+    outline: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 700px;
+    min-height: 100px;
+    margin-bottom: .05rem;
+    padding: 0 1rem;
+}
+.servalog-logo {
+    width: 5rem;
+}
+.egatech-logo {
+    width: 15rem;
+    height: auto;
 }

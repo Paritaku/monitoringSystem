@@ -1,0 +1,31 @@
+.coulee-display summary {
+    font-weight: bold;
+    padding: .5rem;
+}
+.coulee-display details[open] {
+    margin-block: 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.EN-COURS {
+    background-color: cornflowerblue;
+}
+.TERMINE {
+    background-color: #7fffd4;
+}
+.TRANSITION {
+    background-color: #ccc;
+}
+
+.coulee-display table {
+    width: 100%;
+    background-color: #fff1;
+    text-align: center;
+    border-collapse: collapse;
+}
+.coulee-display td, .coulee-display th {
+    padding: .4rem;
+    border-bottom: 1px solid black;
+}
+
+    

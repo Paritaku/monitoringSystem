@@ -9,8 +9,8 @@ import java.nio.charset.StandardCharsets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import ma.storactive.monitoringSystem.entities.Produit;
-import ma.storactive.monitoringSystem.repositories.ProduitRepository;
+import ma.storactive.monitoringSystem.entities.Bloc;
+import ma.storactive.monitoringSystem.repositories.BlocRepository;
 
 
 @Service
@@ -20,7 +20,7 @@ public class PrinterServiceImpl implements PrinterService {
 	private static int port = 9001;
 	
 	@Autowired
-	ProduitRepository produitRepository;
+	BlocRepository produitRepository;
 	
 
 	@Override
@@ -35,7 +35,7 @@ public class PrinterServiceImpl implements PrinterService {
 		return printerSocket.isConnected();
 	}
 
-	public byte[] getExternalDataPacket(Produit mesure) {
+	public byte[] getExternalDataPacket(Bloc mesure) {
 		byte[] dataBytes = mesure.printerString().getBytes(StandardCharsets.UTF_8);
 
 		byte[] commandBytes = new byte[4];
@@ -70,7 +70,7 @@ public class PrinterServiceImpl implements PrinterService {
 	
 	@Override
 	public void sendLastMesureToPrinter() {
-		if(produitRepository.getLastProductSaved().isPresent())
-			sendPacketToPrinter(getExternalDataPacket(produitRepository.getLastProductSaved().get()));
+		if(produitRepository.getLastBlocSaved().isPresent())
+			sendPacketToPrinter(getExternalDataPacket(produitRepository.getLastBlocSaved().get()));
 		}
 	}

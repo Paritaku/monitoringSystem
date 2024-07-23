@@ -15,28 +15,35 @@ import org.springframework.web.bind.annotation.RestController;
 import ma.storactive.monitoringSystem.entities.Bloc;
 import ma.storactive.monitoringSystem.services.BlocService;
 
+
 @RestController
-@RequestMapping("/api/v1/bloc/")
+@RequestMapping("api/v1/bloc/")
 public class BlocController {
 	@Autowired
 	BlocService blocService;
 	
-	@PostMapping("create")
-	public Bloc createBloc(@RequestBody Bloc bloc) {
-		return blocService.createBloc(bloc);
+	@PostMapping("save")
+	public Bloc saveProduct(@RequestBody Bloc p) {
+		return blocService.saveBloc(p);
 	}
-	
+	@GetMapping("getAllProduit")
+	public List<Bloc> getProduit(){
+		return blocService.getAllBlocs();
+	}
+	@GetMapping("getTodayProduct")
+	public List<Bloc> getTodayProduit(){
+		return blocService.getTodayBlocs();
+	}
+	@GetMapping("getLastId")
+	public long getLastId(){
+		return blocService.getLastId();
+	}
 	@DeleteMapping("delete/{id}")
-	public String deleteBloc(@PathVariable long id){
-		return blocService.deleteBloc(id);
+	public void deleteProduit(@PathVariable Long id) {
+		blocService.deleteBloc(id);
 	}
-	
-	@GetMapping("getAll")
-	public List<Bloc> getAll(){
-		return blocService.getAllBloc(); 
-	}
-	@GetMapping("getTodayBloc")
-	public List<Bloc> getTodayBloc(){
-		return blocService.getTodayBloc();
+	@GetMapping("getBlocsByCouleeId/{id}")
+	public List<Bloc> getBlocsByCouleeId(@PathVariable Long id) {
+		return blocService.getBlocsByCouleeId(id);
 	}
 }
