@@ -30,7 +30,7 @@ export default function SensorsData(props) {
     };
 
     //Ajout d'un bloc à la BDD et incrementation du count de bloc dans la coulée
-    async function addBloc() {
+    async function addBloc(comment) {
         const bloc = {
             id: null,
             numero: (props.couleeEnCours.nbBloc + 1),
@@ -41,7 +41,7 @@ export default function SensorsData(props) {
             densite: props.formValue.densiteInputValue,
             coulee: props.couleeEnCours,
             heureEnregistrement: getTime(),
-            /*commentaire: comment*/
+            commentaire: comment
         };
         console.log(bloc);
         const response = await axios.post(ADD_BLOC_URL, bloc);
@@ -88,13 +88,13 @@ export default function SensorsData(props) {
     //Enregistrement du bloc si validation
     useEffect(() => {
         if (props.formValue.validationInputValue > 0) {
-            /*let longueurInputComment = (props.formValue.longueurInputValue > 0 ? "" : "Longueur incorrecte! ");
-            let largeurInputComment = (props.formValue.largeurInputValue > 0 ? "" : "Largeur incorrecte! ");
-            let hauteurInputComment = (props.formValue.hauteurInputValue > 0 ? "" : "Hauteur incorrecte! ");
-            let poidsInputComment = (props.formValue.poidsInputValue > 0 ? "" : "Poids incorrecte! ");
-            let densiteInputComment = (props.formValue.densiteInputValue > 0 ? "" : "Densite incorrecte! ");
+            let longueurInputComment = (props.formValue.longueurInputValue > 0  ? "" : "Longueur incorrecte!");
+            let largeurInputComment = (props.formValue.largeurInputValue > 0 ? "" : "Largeur incorrecte!");
+            let hauteurInputComment = (props.formValue.hauteurInputValue > 0 ? "" : "Hauteur incorrecte!");
+            let poidsInputComment = (props.formValue.poidsInputValue > 0 ? "" : "Poids incorrecte!");
+            let densiteInputComment = (props.formValue.densiteInputValue > 0 ? "" : "Densite incorrecte!");
 
-            let validationInputComment = "TEST INITIAL VALUE";
+            let validationInputComment = "";
             if(props.formValue.validationInputValue == 2 ) {
                 validationInputComment = "Verrin non levé";
             }
@@ -102,8 +102,8 @@ export default function SensorsData(props) {
                 validationInputComment = "";
             }
             let finalComment = longueurInputComment + largeurInputComment + poidsInputComment + hauteurInputComment + densiteInputComment + validationInputComment;
-            console.log(finalComment);*/
-            addBloc();
+            console.log(finalComment);
+            addBloc(finalComment);
         }
     }, [props.formValue])
 
@@ -117,15 +117,6 @@ export default function SensorsData(props) {
                     value={props.couleeEnCours.numero || props.couleeEnCours.nom}
                     name="numeroInputValue"
                 />
-                <span>
-                    {props.couleeEnCours.numero || props.couleeEnCours.nom ? (
-                        <CheckSquareOutlined
-                            style={{ fontSize: "30px", color: "green" }}
-                        />
-                    ) : (
-                        <CloseSquareOutlined style={{ fontSize: "30px", color: "red" }} />
-                    )}
-                </span>
             </div>
 
             <div className="sensors-input-box">
@@ -138,15 +129,6 @@ export default function SensorsData(props) {
                     step={1}
                     onChange={(event) => handleCapteursChange(event)}
                 />
-                <span>
-                    {props.couleeEnCours?.type?.intitule ? (
-                        <CheckSquareOutlined
-                            style={{ fontSize: "30px", color: "green" }}
-                        />
-                    ) : (
-                        <CloseSquareOutlined style={{ fontSize: "30px", color: "red" }} />
-                    )}
-                </span>
             </div>
 
             <div className="sensors-input-box">
@@ -158,15 +140,6 @@ export default function SensorsData(props) {
                     value={props.couleeEnCours.nbBloc + 1}
                     name="numeroInputValue"
                 />
-                <span>
-                    {(props.couleeEnCours.nbBloc + 1) > 0 ? (
-                        <CheckSquareOutlined
-                            style={{ fontSize: "30px", color: "green" }}
-                        />
-                    ) : (
-                        <CloseSquareOutlined style={{ fontSize: "30px", color: "red" }} />
-                    )}
-                </span>
             </div>
             <div className="sensors-input-box">
                 <label>Longueur</label>
@@ -176,15 +149,6 @@ export default function SensorsData(props) {
                     name="longueurInputValue"
                     onChange={(event) => handleCapteursChange(event)}
                 />
-                <span>
-                    {props.formValue.longueurInputValue > 0 ? (
-                        <CheckSquareOutlined
-                            style={{ fontSize: "30px", color: "green" }}
-                        />
-                    ) : (
-                        <CloseSquareOutlined style={{ fontSize: "30px", color: "red" }} />
-                    )}
-                </span>
             </div>
             <div className="sensors-input-box">
                 <label>Largeur</label>
@@ -194,15 +158,6 @@ export default function SensorsData(props) {
                     name="largeurInputValue"
                     onChange={(event) => handleCapteursChange(event)}
                 />
-                <span>
-                    {props.formValue.largeurInputValue > 0 ? (
-                        <CheckSquareOutlined
-                            style={{ fontSize: "30px", color: "green" }}
-                        />
-                    ) : (
-                        <CloseSquareOutlined style={{ fontSize: "30px", color: "red" }} />
-                    )}
-                </span>
             </div>
             <div className="sensors-input-box">
                 <label>Hauteur</label>
@@ -212,15 +167,6 @@ export default function SensorsData(props) {
                     name="hauteurInputValue"
                     onChange={(event) => handleCapteursChange(event)}
                 />
-                <span>
-                    {props.formValue.hauteurInputValue > 0 ? (
-                        <CheckSquareOutlined
-                            style={{ fontSize: "30px", color: "green" }}
-                        />
-                    ) : (
-                        <CloseSquareOutlined style={{ fontSize: "30px", color: "red" }} />
-                    )}
-                </span>
             </div>
             <div className="sensors-input-box">
                 <label>Poids</label>
@@ -230,15 +176,6 @@ export default function SensorsData(props) {
                     name="poidsInputValue"
                     onChange={(event) => handleCapteursChange(event)}
                 />
-                <span>
-                    {props.formValue.poidsInputValue > 0 ? (
-                        <CheckSquareOutlined
-                            style={{ fontSize: "30px", color: "green" }}
-                        />
-                    ) : (
-                        <CloseSquareOutlined style={{ fontSize: "30px", color: "red" }} />
-                    )}
-                </span>
             </div>
             <div className="sensors-input-box">
                 <label>Densite</label>
@@ -248,15 +185,6 @@ export default function SensorsData(props) {
                     name="densiteInputValue"
                     onChange={(event) => handleCapteursChange(event)}
                 />
-                <span>
-                    {props.formValue.densiteInputValue > 0 ? (
-                        <CheckSquareOutlined
-                            style={{ fontSize: "30px", color: "green" }}
-                        />
-                    ) : (
-                        <CloseSquareOutlined style={{ fontSize: "30px", color: "red" }} />
-                    )}
-                </span>
             </div>
             <div className="sensors-input-box">
                 <label>Validation</label>
@@ -266,15 +194,6 @@ export default function SensorsData(props) {
                     value={props.formValue.validationInputValue}
                     onChange={(event) => handleCapteursChange(event)}
                 />
-                <span>
-                    {props.formValue.validationInputValue > 0 ? (
-                        <CheckSquareOutlined
-                            style={{ fontSize: "30px", color: "green" }}
-                        />
-                    ) : (
-                        <CloseSquareOutlined style={{ fontSize: "30px", color: "red" }} />
-                    )}
-                </span>
             </div>
         </div>
     );

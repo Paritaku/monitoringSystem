@@ -42,6 +42,16 @@
     padding: .5rem;
     font-size: 1rem;
     border: none;
-    text-align: center;
-    
+    text-align: center;   
+}
+
+.delete-type-error {
+    font-size: 1.2rem;
+    text-align: justify;
+    display: flex;
+    gap: 1rem;
+}
+.delete-type-error img{
+    align-self: center;
+    width: 10rem;
 }

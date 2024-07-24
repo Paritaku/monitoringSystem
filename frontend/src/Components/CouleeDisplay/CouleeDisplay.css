@@ -27,5 +27,9 @@
     padding: .4rem;
     border-bottom: 1px solid black;
 }
+.comment-div {
+    display: flex;
+    gap: .5rem;
+}
 
     

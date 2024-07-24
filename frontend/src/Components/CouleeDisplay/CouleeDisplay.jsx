@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import "./CouleeDisplay.css"
 import SockJS from 'sockjs-client';
+import danger from '../assets/danger.svg'
 import { Client } from '@stomp/stompjs';
 
 export default function CouleeDisplay(props) {
@@ -10,15 +11,26 @@ export default function CouleeDisplay(props) {
     //
     const WEB_SOCKET_URL = "http://localhost:8080/ws";
     //
-    const BLOC_PER_COULEE_SUBSCRIPTION_URL = "/topic/bloc/today/"+props.coulee.id
+    const BLOC_PER_COULEE_SUBSCRIPTION_URL = "/topic/bloc/today/" + props.coulee.id
 
     //Use state pour stocker  les blocs par coulée
     const [listBlocs, setListBlocs] = useState([]);
     //function pour recupérer les blocs 
-    function fecthListBlocs(){
+    function fecthListBlocs() {
         axios.get(GET_BLOCS_BY_COULEE_URL)
             .then(response => setListBlocs(response.data))
             .catch(error => console.log(error))
+    }
+
+    function rendenringComment(comment) {
+        const splitComment = comment.split("!");
+        return splitComment.map((comment) => (
+            comment != "" &&
+            <div className='comment-div'>
+                <img src={danger} alt="danger" />
+                <span>{comment}</span>
+            </div>
+        ))
     }
 
     useEffect(() => {
@@ -45,24 +57,24 @@ export default function CouleeDisplay(props) {
         stompClient.activate();
 
         return () => {
-            if(stompClient)
+            if (stompClient)
                 stompClient.deactivate();
         }
 
-    },[])
+    }, [])
 
     return (
         <div className='coulee-display'>
             <details>
-                <summary 
+                <summary
                     className={
-                        props.coulee.type.intitule === "TRANSITION" ? props.coulee.type.intitule : props.coulee.statut.replace(/\s+/g,'-')
+                        props.coulee.type.intitule === "TRANSITION" ? props.coulee.type.intitule : props.coulee.statut.replace(/\s+/g, '-')
                     }
                 >
                     {
                         (props.coulee.numero && ("Coulee " + props.coulee.numero)) ||
                         (props.coulee.nom && ("Transition " + props.coulee.nom))
-                    } 
+                    }
                 </summary>
                 {listBlocs.length > 0 && (
                     <table>
@@ -78,7 +90,7 @@ export default function CouleeDisplay(props) {
                                 <th>Poids</th>
                                 <th>Densite</th>
                                 <th>Heure d'enregistrement</th>
-                                {/*<th>Commentaires</th> */}
+                                <th>Commentaires</th>
                             </tr>
                         </thead>
 
@@ -95,14 +107,14 @@ export default function CouleeDisplay(props) {
                                     <td>{bloc.poids}</td>
                                     <td>{bloc.densite}</td>
                                     <td>{bloc.heureEnregistrement}</td>
-                                    {/*<td>{bloc.commentaire}</td> */}
+                                    <td>{rendenringComment(bloc.commentaire)}</td>
                                 </tr>
                             ))}
-                            
+
                         </tbody>
                     </table>
-                )}  
+                )}
             </details>
         </div>
-  )
+    )
 }

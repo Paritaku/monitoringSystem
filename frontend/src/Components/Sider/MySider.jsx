@@ -65,6 +65,7 @@ export function HistoriqueIcon(props) {
 }
 
 export function MenuList() {
+  const URL_PREFIX = "monitoringSystem";
   return (
     <Menu theme="dark" mode="inline" className="menu-bar">
       <Menu.Item key="home" icon={<HomeOutlined />}>
@@ -80,8 +81,8 @@ export function MenuList() {
         icon={<CubeIcon />}
         title="Production"
       >
-        <Menu.Item key="prod-du-jour"><Link to="/produjour"> Prod du jour </Link>  </Menu.Item>
-        <Menu.Item key="prod-en-cours"><Link to="/production"> Production </Link> </Menu.Item>  
+        <Menu.Item key="prod-du-jour"><Link to={URL_PREFIX + "/produjour"}> Prod du jour </Link>  </Menu.Item>
+        <Menu.Item key="prod-en-cours"><Link to={URL_PREFIX + "/production"}> Production </Link> </Menu.Item>  
       </Menu.SubMenu>
 
       <Menu.Item key="rapport" icon={<RapportIcon />}>
@@ -92,7 +93,7 @@ export function MenuList() {
         key="parametre" 
         icon={<SettingOutlined />}
         title="Parametre">
-           <Menu.Item key="types-coulee"><Link to="/typescoulee"> Types de coulée </Link> </Menu.Item>
+           <Menu.Item key="types-coulee"><Link to={URL_PREFIX + "/typescoulee"}> Types de coulée </Link> </Menu.Item>
       </Menu.SubMenu>
 
       <Menu.Item key="historique" icon={<HistoriqueIcon />}>

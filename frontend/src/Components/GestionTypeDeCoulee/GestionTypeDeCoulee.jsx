@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import "./GestionTypeDeCoulee.css"
 import axios from 'axios';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import danger from "../assets/danger.svg";
 
 export function ModifierTypeBtn(props) {
     const [dialogState, setDialogState] = useState(false);
@@ -18,7 +19,7 @@ export function ModifierTypeBtn(props) {
         setIntitule(event.target.value);
     }
     async function saveType(type) {
-        axios.post(SAVE_TYPE_URL, type)
+        await axios.post(SAVE_TYPE_URL, type)
             .catch(error => console.log(error))
     }
     function modifierIntitule() {
@@ -63,6 +64,9 @@ export function ModifierTypeBtn(props) {
 }
 export function SupprimerTypeBtn(props) {
     const [dialogState, setDialogState] = useState(false);
+    const [dialogState2, setDialogState2] = useState(false);
+    //Si des coulées ont ce type dans la bb enrégistrées dans la bdd
+    const [bool, setBool] = useState(false); 
     const DELETE_TYPE_URL = "http://localhost:8080/api/v1/type/delete/";
 
     function showDialog() {
@@ -71,14 +75,33 @@ export function SupprimerTypeBtn(props) {
     function hideDialog() {
         setDialogState(false);
     }
-    async function deleteType() {
-        axios.delete(DELETE_TYPE_URL + props.type.id)
-            .catch(error => console.log(error))
+    function hideDialog2() {
+        setDialogState2(false);
     }
-    function supprimerType() {
-        deleteType();
-        setDialogState(false);
-        location.reload();
+
+    async function deleteType() {
+        try {
+            await axios.delete(DELETE_TYPE_URL + props.type.id);
+
+        } catch (error) {
+            if (error.response) {
+                return error.response.status;
+            }
+        }
+    }
+    async function supprimerType() {
+        const a = await deleteType();
+        if (a === 500) {
+            setDialogState(false);
+            setBool(true);
+            setDialogState2(true);
+        }
+        else {
+            setDialogState(false);
+            location.reload();
+        }
+
+
     }
 
     return (
@@ -86,7 +109,7 @@ export function SupprimerTypeBtn(props) {
             <Button
                 variant='contained'
                 color='error'
-                disabled={props.type.intitule === "TRANSITION" ? true : false}
+                disabled={props.type.intitule === "TRANSITION" || bool ? true : false}
                 onClick={showDialog}
             >
                 Supprimer
@@ -96,6 +119,18 @@ export function SupprimerTypeBtn(props) {
                 <DialogActions>
                     <Button onClick={supprimerType}>Supprimer</Button>
                     <Button onClick={hideDialog}>Annuler</Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog open={dialogState2}>
+                <DialogContent >
+                    <div className='delete-type-error'>
+                        <img src={danger} alt="Error" />
+                        <span> Vous ne pouvez pas supprimer le <strong>type {props.type.intitule} car certaines coulées possède ce type </strong> </span>
+                        <img src={danger} alt="Error" />
+                    </div>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={hideDialog2}>Ok </Button>
                 </DialogActions>
             </Dialog>
         </div>

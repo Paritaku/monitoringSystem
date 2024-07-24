@@ -13,6 +13,7 @@ import Production from "../Production/Production";
 import GestionTypeDeCoulee from "../GestionTypeDeCoulee/GestionTypeDeCoulee";
 
 export default function MyLayout() {
+    const prefix = "monitoringSystem";
     return (
         <Layout>
             <MySider />
@@ -22,9 +23,10 @@ export default function MyLayout() {
                 <Content className="content-wrapper">
                     <Routes>
                         <Route path="/" element={<ProdDuJour />} />
-                        <Route path="/produjour" element={<ProdDuJour />} />
-                        <Route path="/production" element={<Production />} />
-                        <Route path="/typescoulee" element={<GestionTypeDeCoulee />} />
+                        <Route path={prefix + "/"} element={<ProdDuJour />} />
+                        <Route path={prefix + "/produjour"} element={<ProdDuJour />} />
+                        <Route path={prefix + "/production"} element={<Production />} />
+                        <Route path={prefix + "/typescoulee"} element={<GestionTypeDeCoulee />} />
                     </Routes>
                 </Content>
 
