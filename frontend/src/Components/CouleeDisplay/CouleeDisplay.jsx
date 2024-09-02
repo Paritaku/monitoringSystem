@@ -4,6 +4,13 @@ import "./CouleeDisplay.css"
 import SockJS from 'sockjs-client';
 import danger from '../assets/danger.svg'
 import { Client } from '@stomp/stompjs';
+import excel_logo from '../assets/excel.svg';
+import * as XLSX from 'xlsx-js-style';
+
+export function camelCaseToTitleCase(text) {
+    return text.replace(/([A-Z])/g, ' $1')
+        .replace(/^./, str => str.toUpperCase()); // Met la première lettre en majuscule
+}
 
 export default function CouleeDisplay(props) {
     //URL où envoyer le get à l'api pour récupérer les blocs par coulées
@@ -21,7 +28,6 @@ export default function CouleeDisplay(props) {
             .then(response => setListBlocs(response.data))
             .catch(error => console.log(error))
     }
-
     function rendenringComment(comment) {
         const splitComment = comment.split("!");
         return splitComment.map((comment) => (
@@ -31,6 +37,130 @@ export default function CouleeDisplay(props) {
                 <span>{comment}</span>
             </div>
         ))
+    }
+    
+    function generateReport() {
+        const columnWidth = 18;
+        const nbColonne = 11;
+        const table = listBlocs.map((bloc) => {
+            const temp = {
+                numeroDeCoulee: bloc.coulee.numero || bloc.coulee.nom,
+                Type: bloc.coulee.type.intitule,
+                Date: bloc.coulee.date,
+                NumeroDuBloc: bloc.numero,
+                Longueur: bloc.longueur,
+                Largeur: bloc.largeur,
+                Hauteur: bloc.hauteur,
+                Poids: bloc.poids,
+                Densite: bloc.densite,
+                HeureEnregistrement: bloc.heureEnregistrement,
+                Commentaires: bloc.commentaire
+            };
+            return temp;
+        });
+
+        const ws = XLSX.utils.json_to_sheet(table);
+
+        ws['!cols'] = [
+            { wch: columnWidth },
+            { wch: columnWidth },
+            { wch: columnWidth },
+            { wch: columnWidth },
+            { wch: columnWidth },
+            { wch: columnWidth },
+            { wch: columnWidth },
+            { wch: columnWidth },
+            { wch: columnWidth },
+            { wch: columnWidth },
+            { wch: 30 },
+        ];
+        ws['!rows'] = table.map((bloc, index) => {
+            return index === 0 ? { hpx: 50 } : { hpx: 30 }
+        });
+        ws['!rows'].push({ hpx: 30 });
+
+
+        const headerStyle = {
+            alignment: {
+                wrapText: true,
+                vertical: "center",
+                horizontal: "center",
+            },
+            font: {
+                bold: true,
+                color: {
+                    rgb: "444444"
+                },
+            },
+            fill: {
+                fgColor: {
+                    rgb: "ffecb2"
+                }
+            },
+        };
+
+        const commentStyle = {
+            font: {
+                bold: true,
+                color: {
+                    rgb: "FFFFFF"
+                },
+                name: "Baskerville",
+            },
+            fill: {
+                fgColor: {
+                    rgb: "FB4F5D"
+                }
+            },
+            border: {
+                bottom: {
+                    style: "thick",
+                    color: {
+                        rgb: "FFFFFF"
+                    }
+                }
+            }
+        };
+
+        if (table.length) {
+            /*Formattage header*/
+            for (let i = 0; i < nbColonne; i++) {
+                const cellAdress = XLSX.utils.encode_cell({ c: i, r: 0 });
+                ws[cellAdress].v = camelCaseToTitleCase(ws[cellAdress].v);
+                ws[cellAdress].s = headerStyle;
+            }
+
+            table.forEach((bloc, index) => {
+                for (let i = 0; i < 11; i++) {
+                    const cellAdress = XLSX.utils.encode_cell({ c: i, r: (index + 1) });
+                    //Centrer le contenu à l'intérieur de toutes les cellules
+                    ws[cellAdress].s = {
+                        ...ws[cellAdress].s,
+                        alignment: {
+                            vertical: "center",
+                            horizontal: "center",
+                        }
+                    }
+                }
+            })
+            table.forEach((bloc, index) => {
+                const cellAdress = XLSX.utils.encode_cell({ c: 10, r: (index + 1) });
+                if (ws[cellAdress].v) {
+                    for (let i = 0; i < 11; i++) {
+                        const cellAdress2 = XLSX.utils.encode_cell({ c: i, r: (index + 1) });
+                        ws[cellAdress2].s = {
+                            ...ws[cellAdress2].s,
+                            ...commentStyle,
+                        }
+                    }
+                }
+            })
+        }
+
+        const classeur = XLSX.utils.book_new();
+        const name = props.coulee.numero ? `Coulee ${props.coulee.numero}` : `Transition ${props.coulee.nom}`;
+        XLSX.utils.book_append_sheet(classeur, ws, name);
+        XLSX.writeFile(classeur, name + ".xlsx");
     }
 
     useEffect(() => {
@@ -75,6 +205,9 @@ export default function CouleeDisplay(props) {
                         (props.coulee.numero && ("Coulee " + props.coulee.numero)) ||
                         (props.coulee.nom && ("Transition " + props.coulee.nom))
                     }
+                    <button title='Générer rapport' className='report-bouton' onClick={generateReport}>
+                        <img src={excel_logo} />
+                    </button>
                 </summary>
                 {listBlocs.length > 0 && (
                     <table>
@@ -110,7 +243,6 @@ export default function CouleeDisplay(props) {
                                     <td>{rendenringComment(bloc.commentaire)}</td>
                                 </tr>
                             ))}
-
                         </tbody>
                     </table>
                 )}

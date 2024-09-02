@@ -28,52 +28,71 @@ export default function SensorsData(props) {
             [name]: value,
         }));
     };
+    const handleValidationChange = (event) => {
+        const { name, value } = event.target;
+        props.setValidationInputValue(value);
+    };
+    const handlePresenceChange = (event) => {
+        const { name, value } = event.target;
+        props.setPresenceInputValue(value);
+    };
 
     //Ajout d'un bloc à la BDD et incrementation du count de bloc dans la coulée
     async function addBloc(comment) {
-        const bloc = {
-            id: null,
-            numero: (props.couleeEnCours.nbBloc + 1),
-            hauteur: props.formValue.hauteurInputValue,
-            longueur: props.formValue.longueurInputValue,
-            largeur: props.formValue.largeurInputValue,
-            poids: props.formValue.poidsInputValue,
-            densite: props.formValue.densiteInputValue,
-            coulee: props.couleeEnCours,
-            heureEnregistrement: getTime(),
-            commentaire: comment
-        };
-        console.log(bloc);
-        const response = await axios.post(ADD_BLOC_URL, bloc);
-        if (response.status === 200) {
-            /* //Verifier si l'imprimante est connecté
-            const printer_connected = await axios.get(PRINTER_CONNECTION_STATUS);
-            if (printer_connected.data === true) {
-                //Envoyer le produit enregistré à l'imprimante
-                const response2 = await axios.post(SEND_PRODUCT_TO_PRINTER_URL);
-                response2.status === 200
-                    ? console.log("Données envoyées")
-                    : console.log("Erreur lors de l'envoi");
-            }*/
-            props.setCouleeEnCours((prev) => {
-                const a = {
-                    ...prev,
-                    nbBloc: Number(prev.nbBloc) + 1
-                }
-                console.log(a);
-                axios.post(SAVE_COULEE_URL, a);
-                return a;
-            })
+        if (props.couleeEnCours.statut === "EN COURS") {
+            let longueurInputComment = (props.formValue.longueurInputValue > 0 ? "" : "Longueur incorrecte!");
+            let largeurInputComment = (props.formValue.largeurInputValue > 0 ? "" : "Largeur incorrecte!");
+            let hauteurInputComment = (props.formValue.hauteurInputValue > 0 ? "" : "Hauteur incorrecte!");
+            let poidsInputComment = (props.formValue.poidsInputValue > 0 ? "" : "Poids incorrecte!");
+            let densiteInputComment = (props.formValue.densiteInputValue > 0 ? "" : "Densite incorrecte!");
 
-            props.setFormValue((prev) => ({
-                hauteurInputValue: "",
-                longueurInputValue: "",
-                largeurInputValue: "",
-                poidsInputValue: "",
-                densiteInputValue: "",
-                validationInputValue: "",
-            }));
+            let finalComment = longueurInputComment + largeurInputComment + poidsInputComment + hauteurInputComment + densiteInputComment + comment;
+
+            const bloc = {
+                id: null,
+                numero: (props.couleeEnCours.nbBloc + 1),
+                hauteur: props.formValue.hauteurInputValue,
+                longueur: props.formValue.longueurInputValue,
+                largeur: props.formValue.largeurInputValue,
+                poids: props.formValue.poidsInputValue,
+                densite: props.formValue.densiteInputValue,
+                coulee: props.couleeEnCours,
+                heureEnregistrement: getTime(),
+                commentaire: finalComment
+            };
+            console.log(bloc);
+            const response = await axios.post(ADD_BLOC_URL, bloc);
+            if (response.status === 200) {
+                /* //Verifier si l'imprimante est connecté
+                const printer_connected = await axios.get(PRINTER_CONNECTION_STATUS);
+                if (printer_connected.data === true) {
+                    //Envoyer le produit enregistré à l'imprimante
+                    const response2 = await axios.post(SEND_PRODUCT_TO_PRINTER_URL);
+                    response2.status === 200
+                        ? console.log("Données envoyées")
+                        : console.log("Erreur lors de l'envoi");
+                }*/
+                props.setCouleeEnCours((prev) => {
+                    const a = {
+                        ...prev,
+                        nbBloc: Number(prev.nbBloc) + 1
+                    }
+                    console.log(a);
+                    axios.post(SAVE_COULEE_URL, a);
+                    return a;
+                })
+
+                /*props.setFormValue((prev) => ({
+                    hauteurInputValue: "",
+                    longueurInputValue: "",
+                    largeurInputValue: "",
+                    poidsInputValue: "",
+                    densiteInputValue: "",
+                    presenceInputValue: 0,
+                    validationInputValue: 0,
+                }));*/
         }
+    }
     };
 
     //Recupérer l'heure sous la forme hh-mm-ss
@@ -85,27 +104,18 @@ export default function SensorsData(props) {
         return hours + ":" + minutes + ":" + seconds;
     };
 
-    //Enregistrement du bloc si validation
     useEffect(() => {
-        if (props.formValue.validationInputValue > 0) {
-            let longueurInputComment = (props.formValue.longueurInputValue > 0  ? "" : "Longueur incorrecte!");
-            let largeurInputComment = (props.formValue.largeurInputValue > 0 ? "" : "Largeur incorrecte!");
-            let hauteurInputComment = (props.formValue.hauteurInputValue > 0 ? "" : "Hauteur incorrecte!");
-            let poidsInputComment = (props.formValue.poidsInputValue > 0 ? "" : "Poids incorrecte!");
-            let densiteInputComment = (props.formValue.densiteInputValue > 0 ? "" : "Densite incorrecte!");
-
-            let validationInputComment = "";
-            if(props.formValue.validationInputValue == 2 ) {
-                validationInputComment = "Verrin non levé";
-            }
-            else if (props.formValue.validationInputValue == 1) {
-                validationInputComment = "";
-            }
-            let finalComment = longueurInputComment + largeurInputComment + poidsInputComment + hauteurInputComment + densiteInputComment + validationInputComment;
-            console.log(finalComment);
-            addBloc(finalComment);
+        if(props.validationInputValue == 1) {
+            addBloc("");
         }
-    }, [props.formValue])
+    },[props.validationInputValue])
+
+    useEffect(() => {
+        if(props.validationInputValue != 1 && props.presenceInputValue == 1 ) {
+            let validationInputComment = "Verrin non levé";
+            addBloc(validationInputComment);
+        }
+    },[props.presenceInputValue])
 
     return (
         <div className="sensors-data-container">
@@ -187,12 +197,21 @@ export default function SensorsData(props) {
                 />
             </div>
             <div className="sensors-input-box">
+                <label>Presence</label>
+                <input
+                    type="number"
+                    name="presenceInputValue"
+                    value={props.presenceInputValue}
+                    onChange={(event) => handlePresenceChange(event)}
+                />
+            </div>
+            <div className="sensors-input-box">
                 <label>Validation</label>
                 <input
                     type="number"
                     name="validationInputValue"
-                    value={props.formValue.validationInputValue}
-                    onChange={(event) => handleCapteursChange(event)}
+                    value={props.validationInputValue}
+                    onChange={(event) => handleValidationChange(event)}
                 />
             </div>
         </div>

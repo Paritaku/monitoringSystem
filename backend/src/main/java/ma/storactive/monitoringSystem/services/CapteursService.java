@@ -11,6 +11,8 @@ public interface CapteursService {
 	Bloc getCapteursValues();
 	double round(double value, int decimal);
 	int validation();
-	void fetchData();
-	
+	int presence();
+	void sendMesures();
+	void sendValidation();
+	void sendPresence();
 }

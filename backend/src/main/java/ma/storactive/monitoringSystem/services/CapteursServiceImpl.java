@@ -98,15 +98,42 @@ public class CapteursServiceImpl implements CapteursService {
 		}
 		return -1;
 	}
-
-	@Scheduled(fixedRate = 4000)
+	
 	@Override
-	public void fetchData() {
+	public int presence() {
+		if(isConnected()) {
+			PlcReadRequest.Builder requestBuilder = plcConnection.readRequestBuilder();
+			requestBuilder.addTagAddress("presence", "%IW36:INT");
+
+			PlcReadRequest readRequest = requestBuilder.build();
+			try {
+				PlcReadResponse readResponse = readRequest.execute().get();
+				return readResponse.getInteger("presence");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return -2;
+	}
+
+	@Scheduled(fixedRate = 10)
+	@Override
+	public void sendMesures() {
 		Bloc b = getCapteursValues();
-		/*int validation = validation();*/
 		if(b != null)
 			template.convertAndSend("/topic/data", getCapteursValues());
-		template.convertAndSend("/topic/validation", validation());
-		
+	}
+
+	@Scheduled(fixedRate = 10)
+	@Override
+	public void sendValidation() {
+		int validation = validation();
+		template.convertAndSend("/topic/validation", validation);
+	}
+
+	@Override
+	@Scheduled(fixedRate = 10)
+	public void sendPresence() {
+		template.convertAndSend("/topic/presence", presence());	
 	}
 }

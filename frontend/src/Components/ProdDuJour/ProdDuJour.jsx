@@ -28,9 +28,10 @@ export default function ProdDuJour() {
         longueurInputValue: "",
         largeurInputValue: "",
         poidsInputValue: "",
-        densiteInputValue: "",
-        validationInputValue: "",
+        densiteInputValue: "",        
     });
+    const[validationInputValue, setValidationInputValue] = useState("0");
+    const[presenceInputValue, setPresenceInputValue] = useState("0");
 
     //Fonction pour recuperer les coulées du jour depuis l'API
     async function fetchTodayCoulees() {
@@ -75,10 +76,11 @@ export default function ProdDuJour() {
                 });
                 stompClient.subscribe("/topic/validation", (message) => {
                     console.log(JSON.parse(message.body));
-                    setFormValue((prev) => ({
-                        ...prev,
-                        validationInputValue: JSON.parse(message.body)
-                    }))
+                    setValidationInputValue(JSON.parse(message.body))
+                });
+                stompClient.subscribe("/topic/presence", (message) => {
+                    console.log(JSON.parse(message.body));
+                    setPresenceInputValue(JSON.parse(message.body))
                 });
             },
             onStompError: (frame) => {
@@ -102,6 +104,10 @@ export default function ProdDuJour() {
                     setCouleeEnCours={setCouleeEnCours}
                     formValue = {formValue}
                     setFormValue = {setFormValue}
+                    presenceInputValue = {presenceInputValue}
+                    setPresenceInputValue = {setPresenceInputValue}
+                    validationInputValue = {validationInputValue}
+                    setValidationInputValue = {setValidationInputValue}
                 />
                 <CouleeProduction
                     couleeEnCours={couleeEnCours}

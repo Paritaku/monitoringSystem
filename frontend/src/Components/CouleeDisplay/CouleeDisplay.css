@@ -1,12 +1,23 @@
 .coulee-display summary {
     font-weight: bold;
-    padding: .5rem;
+    padding: 1rem;
+    position: relative;
 }
+.report-bouton{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 1rem;
+}
+.report-bouton img:hover{
+    height: 2rem;
+}
+
 .coulee-display details[open] {
     margin-block: 1rem;
     border: 1px solid rgba(0, 0, 0, 0.1);
 }
-
+ 
 .EN-COURS {
     background-color: cornflowerblue;
 }
@@ -27,9 +38,8 @@
     padding: .4rem;
     border-bottom: 1px solid black;
 }
+
 .comment-div {
     display: flex;
     gap: .5rem;
-}
-
-    
+}  

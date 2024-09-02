@@ -6,7 +6,7 @@
     justify-content: flex-start;
     flex-wrap: wrap;
     gap: 1rem;
-    padding: 1rem;
+    padding: 2rem;
     background-color: #eee;
     border-radius: 10px;
     box-shadow: 5px 5px 5px rgba(0,0,0,0.2);
@@ -27,5 +27,6 @@
     padding: 4px 0px; 
     text-align: center;
     border-radius: 5px;
-    height: fit-content;
+    width: 50%;
+    overflow: auto;
 }

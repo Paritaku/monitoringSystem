@@ -7,8 +7,8 @@ spring:
    
  datasource:
   url: jdbc:mysql://localhost:3306/1_ms?createDatabaseIfNotExist=true
-  username: root
-  password: root
+  username: servalog
+  password: servalog@123
   driver-class-name: com.mysql.cj.jdbc.Driver
   
  jpa:
